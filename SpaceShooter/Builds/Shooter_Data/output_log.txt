@@ -11,11 +11,15 @@ Platform assembly: C:\Users\Kevin Chan\Documents\GitHub\StarfightervsAstroids\Sp
 Loading C:\Users\Kevin Chan\Documents\GitHub\StarfightervsAstroids\SpaceShooter\Builds\Shooter_Data\Managed\UnityEngine.dll into Unity Child Domain
 Platform assembly: C:\Users\Kevin Chan\Documents\GitHub\StarfightervsAstroids\SpaceShooter\Builds\Shooter_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Users\Kevin Chan\Documents\GitHub\StarfightervsAstroids\SpaceShooter\Builds\Shooter_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-- Completed reload, in  0.104 seconds
+- Completed reload, in  0.054 seconds
 desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
-Your email is kchan039@gmail.com
+Your email is mageonlys@gmail.com
+ 
+(Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
+
+Your email is mageonlys@gmail.com
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
 
