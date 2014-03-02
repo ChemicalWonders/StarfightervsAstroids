@@ -13,41 +13,66 @@ public class GameController : MonoBehaviour {
 	public GUIText scoreText;
 	public GUIText restartText;
 	public GUIText gameOverText;
-	public GUIText nextWaveText;
+	public GUIText highScore;
+
+	//FOR EMAIL
+	private string email;
 
 	private int score;
 	private bool restart;
 	private bool gameOver;
-	private int waveNumber;
 
 	void Start()
-	{
+	{		
+		//FOR EMAIL
+		email = "example@example.example";
+		//MonoBehaviour.enabled = true;
 		score = 0;
-		waveNumber = 1;
 		gameOver = false;
 		restart = false;
 		restartText.text = "";
 		gameOverText.text = "";
-		nextWaveText.text = "";
+		if(PlayerPrefs.GetInt("highscore")>0){
+			highScore.text = "High Score " + PlayerPrefs.GetInt("highscore");
+		}else{
+			PlayerPrefs.SetInt ("highscore",0);
+			highScore.text = "High Score 0";
+		}
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
 	}
 
 	void Update()
 	{
-		if (restart) {
-		
-			if (Input.GetKeyDown (KeyCode.R)) {
-				Application.LoadLevel (Application.loadedLevel);
-			}
-		}
+
 	}
 
-
+	void OnGUI () {
+		// Make a background box
+		//if(restart){
+			GUI.Box(new Rect(300,100,150,30), "Astroid Destroyer Menu");
+			
+			// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
+			if(GUI.Button(new Rect(310,130,80,20), "Play Game")) {
+				Application.LoadLevel (Application.loadedLevel);
+			}
+			
+			// Make the second button.
+			if(GUI.Button(new Rect(310,160,80,20), "Quit Game")) {
+				Application.LoadLevel("Quit");
+			}
+			
+			//FOR EMAIL
+			if(GUI.Button(new Rect(310,190,200,20), "Send your high score to: ")) {
+				//CODE TO USE SENDGRID
+				print ("Your email is " + email);
+			}
+			email = GUI.TextField(new Rect(310, 220, 200, 20), email, 25);
+			
+		//}
+	}
 	IEnumerator SpawnWaves(){
-		nextWaveText.text = "Wave #1";
 		yield return new WaitForSeconds (startWait);
-		nextWaveText.text = "";
 		while(true)
 		{
 			for (int i = 0; i < hazardCount; ++i) 
@@ -57,33 +82,29 @@ public class GameController : MonoBehaviour {
 					Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 
-				if (alpha == 1){
-					Instantiate (hazard, spawnPosition, spawnRotation);		
+					if (alpha == 1){
+					Instantiate (hazard, spawnPosition, spawnRotation);
+					
 				}
 
 				else {
 					Instantiate (hazard2, spawnPosition, spawnRotation);
 				}
 
-
-
 				yield return new WaitForSeconds(spawnWait);
 			}
+			yield return new WaitForSeconds(waveWait);
+
 			if(gameOver){
-				restartText.text = "Press 'R' for Restart";
+			 	if(score > PlayerPrefs.GetInt("highscore"))
+				{
+					PlayerPrefs.SetInt("highscore",score);
+					highScore.text = "High Score" + PlayerPrefs.GetInt("highscore");
+				}
+				restartText.text = "Tap/click to Restart";
 				restart = true;
 				break;
 			}
-			++waveNumber;
-			nextWaveText.text = "Wave #" + waveNumber;
-			if(this.getScore() > 15){
-				hazardCount *=2;
-				spawnWait /=2;
-			}
-			
-			yield return new WaitForSeconds(waveWait);
-			nextWaveText.text = "";
-			
 		}
 	}
 
@@ -93,18 +114,6 @@ public class GameController : MonoBehaviour {
 		UpdateScore ();
 	}
 
-	/*public void MinusScore(int ScoreValue)
-	{
-		if(this.getScore() > 0)
-		{
-			score -= ScoreValue;
-			UpdateScore();
-		}
-		else{
-			return;
-		}
-	}*/
-
 	void UpdateScore()
 	{
 		scoreText.text = "Score: " + score;
@@ -112,6 +121,7 @@ public class GameController : MonoBehaviour {
 
 	public void GameOver()
 	{
+
 		gameOverText.text = "Game Over!";
 		gameOver = true;
 	}
@@ -119,4 +129,5 @@ public class GameController : MonoBehaviour {
 	public int getScore(){
 		return score;
 	}
+
 }
