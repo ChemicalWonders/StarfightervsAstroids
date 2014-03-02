@@ -32,6 +32,12 @@ public class PlayerController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
+		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+            Vector3 pos = Input.GetTouch(0).position;
+			Vector3 touchDeltaPosition = Camera.main.ScreenToWorldPoint(pos);
+            rigidbody.position = new Vector3 (Mathf.Clamp (touchDeltaPosition.x, boundary.xMin, boundary.xMax),0, Mathf.Clamp (touchDeltaPosition.z, boundary.zMin, boundary.zMax));
+        }
+
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 		rigidbody.velocity = movement * speed;
 

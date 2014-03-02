@@ -20,7 +20,7 @@ public class AsteroidVariedMover : MonoBehaviour {
 		rigidbody.velocity = transform.forward*speed;
 		}
 		else {
-			rigidbody.velocity = transform.forward*(speed - gameController.getScore());
+			rigidbody.velocity = transform.forward*(speed - (gameController.getScore()/3));
 		}
 	}
 }
