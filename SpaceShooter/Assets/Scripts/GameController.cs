@@ -13,18 +13,22 @@ public class GameController : MonoBehaviour {
 	public GUIText scoreText;
 	public GUIText restartText;
 	public GUIText gameOverText;
+	public GUIText nextWaveText;
 
 	private int score;
 	private bool restart;
 	private bool gameOver;
+	private int waveNumber;
 
 	void Start()
 	{
 		score = 0;
+		waveNumber = 1;
 		gameOver = false;
 		restart = false;
 		restartText.text = "";
 		gameOverText.text = "";
+		nextWaveText.text = "";
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
 	}
@@ -41,7 +45,9 @@ public class GameController : MonoBehaviour {
 
 
 	IEnumerator SpawnWaves(){
+		nextWaveText.text = "Wave #1";
 		yield return new WaitForSeconds (startWait);
+		nextWaveText.text = "";
 		while(true)
 		{
 			for (int i = 0; i < hazardCount; ++i) 
@@ -51,24 +57,33 @@ public class GameController : MonoBehaviour {
 					Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 
-					if (alpha == 1){
-					Instantiate (hazard, spawnPosition, spawnRotation);
-					
+				if (alpha == 1){
+					Instantiate (hazard, spawnPosition, spawnRotation);		
 				}
 
 				else {
 					Instantiate (hazard2, spawnPosition, spawnRotation);
 				}
 
+
+
 				yield return new WaitForSeconds(spawnWait);
 			}
-			yield return new WaitForSeconds(waveWait);
-
 			if(gameOver){
 				restartText.text = "Press 'R' for Restart";
 				restart = true;
 				break;
 			}
+			++waveNumber;
+			nextWaveText.text = "Wave #" + waveNumber;
+			if(this.getScore() > 15){
+				hazardCount *=2;
+				spawnWait /=2;
+			}
+			
+			yield return new WaitForSeconds(waveWait);
+			nextWaveText.text = "";
+			
 		}
 	}
 
@@ -77,6 +92,18 @@ public class GameController : MonoBehaviour {
 		score += newScoreValue;
 		UpdateScore ();
 	}
+
+	/*public void MinusScore(int ScoreValue)
+	{
+		if(this.getScore() > 0)
+		{
+			score -= ScoreValue;
+			UpdateScore();
+		}
+		else{
+			return;
+		}
+	}*/
 
 	void UpdateScore()
 	{
