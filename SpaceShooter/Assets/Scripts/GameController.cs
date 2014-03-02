@@ -13,33 +13,64 @@ public class GameController : MonoBehaviour {
 	public GUIText scoreText;
 	public GUIText restartText;
 	public GUIText gameOverText;
+	public GUIText highScore;
+
+	//FOR EMAIL
+	private string email;
 
 	private int score;
 	private bool restart;
 	private bool gameOver;
 
 	void Start()
-	{
+	{		
+		//FOR EMAIL
+		email = "example@example.example";
+		//MonoBehaviour.enabled = true;
 		score = 0;
 		gameOver = false;
 		restart = false;
 		restartText.text = "";
 		gameOverText.text = "";
+		if(PlayerPrefs.GetInt("highscore")>0){
+			highScore.text = "High Score " + PlayerPrefs.GetInt("highscore");
+		}else{
+			PlayerPrefs.SetInt ("highscore",0);
+			highScore.text = "High Score 0";
+		}
 		UpdateScore ();
 		StartCoroutine (SpawnWaves ());
 	}
 
 	void Update()
 	{
-		if (restart) {
-		
-			if (Input.GetKeyDown (KeyCode.R)) {
-				Application.LoadLevel (Application.loadedLevel);
-			}
-		}
+
 	}
 
-
+	void OnGUI () {
+		// Make a background box
+		//if(restart){
+			GUI.Box(new Rect(300,100,150,30), "Astroid Destroyer Menu");
+			
+			// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
+			if(GUI.Button(new Rect(310,130,80,20), "Play Game")) {
+				Application.LoadLevel (Application.loadedLevel);
+			}
+			
+			// Make the second button.
+			if(GUI.Button(new Rect(310,160,80,20), "Quit Game")) {
+				Application.LoadLevel("Quit");
+			}
+			
+			//FOR EMAIL
+			if(GUI.Button(new Rect(310,190,200,20), "Send your high score to: ")) {
+				//CODE TO USE SENDGRID
+				print ("Your email is " + email);
+			}
+			email = GUI.TextField(new Rect(310, 220, 200, 20), email, 25);
+			
+		//}
+	}
 	IEnumerator SpawnWaves(){
 		yield return new WaitForSeconds (startWait);
 		while(true)
@@ -65,7 +96,12 @@ public class GameController : MonoBehaviour {
 			yield return new WaitForSeconds(waveWait);
 
 			if(gameOver){
-				restartText.text = "Press 'R' for Restart";
+			 	if(score > PlayerPrefs.GetInt("highscore"))
+				{
+					PlayerPrefs.SetInt("highscore",score);
+					highScore.text = "High Score" + PlayerPrefs.GetInt("highscore");
+				}
+				restartText.text = "Tap/click to Restart";
 				restart = true;
 				break;
 			}
@@ -85,6 +121,7 @@ public class GameController : MonoBehaviour {
 
 	public void GameOver()
 	{
+
 		gameOverText.text = "Game Over!";
 		gameOver = true;
 	}
@@ -92,4 +129,5 @@ public class GameController : MonoBehaviour {
 	public int getScore(){
 		return score;
 	}
+
 }
