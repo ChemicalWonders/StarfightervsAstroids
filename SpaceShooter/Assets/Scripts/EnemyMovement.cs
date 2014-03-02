@@ -15,7 +15,7 @@ public class EnemyMovement : MonoBehaviour {
 	void Update(){
 		if (Time.time > nextFire) 
 		{
-			nextFire = Time.time + fireRate*100;
+			nextFire = Time.time + fireRate;
 			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
 			audio.Play ();
 		}

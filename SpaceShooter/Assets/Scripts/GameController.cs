@@ -4,6 +4,7 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 	public GameObject hazard;
 	public GameObject hazard2;
+	public GameObject hazard3;
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public float spawnWait;
@@ -17,15 +18,15 @@ public class GameController : MonoBehaviour {
 
 	//FOR EMAIL
 	private string email;
-
+	
 	private int score;
 	private int waveNumber;
 	private bool restart;
 	private bool gameOver;
 
 	void Start()
-	{		
-		//FOR EMAIL
+	{	
+        //FOR EMAIL
 		email = "example@example.example";
 		//MonoBehaviour.enabled = true;
 		score = 0;
@@ -33,9 +34,12 @@ public class GameController : MonoBehaviour {
 		gameOver = false;
 		restart = false;
 		gameOverText.text = "";
-		if(PlayerPrefs.GetInt("highscore")>0){
+		if(PlayerPrefs.GetInt("highscore")>0)
+		{
 			highScore.text = "High Score " + PlayerPrefs.GetInt("highscore");
-		}else{
+		}
+		else
+		{
 			PlayerPrefs.SetInt ("highscore",0);
 			highScore.text = "High Score 0";
 		}
@@ -43,8 +47,25 @@ public class GameController : MonoBehaviour {
 		StartCoroutine (SpawnWaves ());
 	}
 
+	IEnumerator WaitForRequest(WWW www)
+    {
+        yield return www;
+
+        if (www.error == null)
+        {
+            Debug.Log("WWW Ok!: " + www.text);
+        }
+         else {
+            Debug.Log("WWW Error: "+ www.error);
+        }    
+    }
+
 	void Update()
 	{
+	}
+
+	public string getEmail() {
+		return email;
 	}
 
 	void OnGUI () {
@@ -59,13 +80,32 @@ public class GameController : MonoBehaviour {
 			
 			// Make the second button.
 			if(GUI.Button(new Rect(310,160,80,20), "Quit Game")) {
-				Application.LoadLevel("Quit");
+				Application.Quit();			
 			}
 			
 			//FOR EMAIL
 			if(GUI.Button(new Rect(310,190,200,20), "Send your high score to: ")) {
-				//CODE TO USE SENDGRID
 				print ("Your email is " + email);
+
+				string url = "https://api.sendgrid.com/api/mail.send.json";
+		        string api_user = "kchan039";
+		        string api_key = "123456";
+		        string to = this.getEmail();
+		        string subject = "High Score for Astroid Shooter!";
+		        string text = "Look at my score! I got " + this.getScore() + "! Can you beat me?";
+		        string from = "kchan039@gmail.com";
+
+		        WWWForm form = new WWWForm();
+		        form.AddField("api_user", api_user);
+		        form.AddField("api_key", api_key);
+		        form.AddField("to", to);
+		        form.AddField("toName", "");
+		        form.AddField("subject", subject);
+		        form.AddField("text", text);
+		        form.AddField("from", from);
+		        WWW www = new WWW(url, form);
+
+				StartCoroutine(WaitForRequest(www));
 			}
 			email = GUI.TextField(new Rect(310, 220, 200, 20), email, 25);
 			
@@ -79,7 +119,7 @@ public class GameController : MonoBehaviour {
 		{
 			for (int i = 0; i < hazardCount; ++i) 
 			{
-				int alpha = Random.Range(1, 3);
+				int alpha = Random.Range(1, 4);
 
 					Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
@@ -88,6 +128,10 @@ public class GameController : MonoBehaviour {
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					
 				}
+
+				/*else if (alpha == 3  && this.getScore() > 15){
+					Instantiate (hazard3, spawnPosition, spawnRotation);
+				}*/
 
 				else {
 					Instantiate (hazard2, spawnPosition, spawnRotation);
