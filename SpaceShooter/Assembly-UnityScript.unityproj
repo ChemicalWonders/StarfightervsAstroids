@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{31EA003C-1CF9-D946-A919-8AC5ED6BE76A}</ProjectGuid>
+	<ProjectGuid>{41F4E3CF-A4EB-4D31-22F7-FC67D6B2239D}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<AssemblyName>Assembly-UnityScript</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
 	<BaseDirectory>Assets</BaseDirectory>
@@ -46,16 +46,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AsteroidVariedMover.cs" />
-     <Compile Include="Assets\Scripts\DestoryByContact.cs" />
-     <Compile Include="Assets\Scripts\DestroyByBoundary.cs" />
-     <Compile Include="Assets\Scripts\DestroyByTime.cs" />
-     <Compile Include="Assets\Scripts\EnemyMovement.cs" />
-     <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\Mover.cs" />
-     <Compile Include="Assets\Scripts\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\RandomRotator.cs" />
-     <Compile Include="Assets\Scripts\lazerboltmover.cs" />
+     <Compile Include="Assets\Scripts\SendGrid.js" />
+     <None Include="Assets\Scripts\Smtpapi\packages\NUnit.2.6.3\license.txt" />
+     <None Include="Assets\Scripts\Smtpapi\packages\NUnit.2.6.3\lib\nunit.framework.xml" />
+ <Reference Include="nunit.framework">
+ <HintPath>Assets\Scripts\Smtpapi\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

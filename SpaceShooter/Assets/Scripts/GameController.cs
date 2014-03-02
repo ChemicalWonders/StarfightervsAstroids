@@ -11,14 +11,15 @@ public class GameController : MonoBehaviour {
 	public float waveWait;
 
 	public GUIText scoreText;
-	public GUIText restartText;
 	public GUIText gameOverText;
 	public GUIText highScore;
+	public GUIText waveText;
 
 	//FOR EMAIL
 	private string email;
 
 	private int score;
+	private int waveNumber;
 	private bool restart;
 	private bool gameOver;
 
@@ -28,9 +29,9 @@ public class GameController : MonoBehaviour {
 		email = "example@example.example";
 		//MonoBehaviour.enabled = true;
 		score = 0;
+		waveNumber = 1;
 		gameOver = false;
 		restart = false;
-		restartText.text = "";
 		gameOverText.text = "";
 		if(PlayerPrefs.GetInt("highscore")>0){
 			highScore.text = "High Score " + PlayerPrefs.GetInt("highscore");
@@ -44,12 +45,11 @@ public class GameController : MonoBehaviour {
 
 	void Update()
 	{
-
 	}
 
 	void OnGUI () {
 		// Make a background box
-		//if(restart){
+		if(restart){
 			GUI.Box(new Rect(300,100,150,30), "Astroid Destroyer Menu");
 			
 			// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
@@ -69,11 +69,13 @@ public class GameController : MonoBehaviour {
 			}
 			email = GUI.TextField(new Rect(310, 220, 200, 20), email, 25);
 			
-		//}
+		}
 	}
 	IEnumerator SpawnWaves(){
+		waveText.text = "Wave #" + waveNumber;
 		yield return new WaitForSeconds (startWait);
-		while(true)
+		waveText.text = "";
+		while(!gameOver)
 		{
 			for (int i = 0; i < hazardCount; ++i) 
 			{
@@ -93,24 +95,32 @@ public class GameController : MonoBehaviour {
 
 				yield return new WaitForSeconds(spawnWait);
 			}
-			yield return new WaitForSeconds(waveWait);
 
 			if(gameOver){
-			 	if(score > PlayerPrefs.GetInt("highscore"))
-				{
-					PlayerPrefs.SetInt("highscore",score);
-					highScore.text = "High Score" + PlayerPrefs.GetInt("highscore");
-				}
-				restartText.text = "Tap/click to Restart";
 				restart = true;
 				break;
 			}
+			++waveNumber;
+			waveText.text = "Wave #" + waveNumber;
+			
+			yield return new WaitForSeconds(waveWait);
+			waveText.text = "";
+
+			
 		}
 	}
 
 	public void AddScore(int newScoreValue)
 	{
 		score += newScoreValue;
+
+		if(score > PlayerPrefs.GetInt("highscore"))
+		{
+
+			PlayerPrefs.SetInt("highscore",score);
+			highScore.text = "High Score" + PlayerPrefs.GetInt("highscore");
+		}
+
 		UpdateScore ();
 	}
 
